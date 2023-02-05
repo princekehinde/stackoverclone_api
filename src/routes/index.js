@@ -2,7 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-// const userAuthRoute = require('./userAuth')
+const userAuthRoute = require('./user')
 // const questionRoute = require('./question')
 
 const app = express();
@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to stack');
 });
 
-// app.use('/user', userAuthRoute);
+app.use('/user', userAuthRoute);
 // app.use('/question', questionRoute);
 
 module.exports = app;
