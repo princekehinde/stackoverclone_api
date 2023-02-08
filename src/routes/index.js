@@ -3,7 +3,7 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const userAuthRoute = require('./user')
-// const questionRoute = require('./question')
+const questionRoute = require('./question')
 
 const app = express();
 
@@ -17,6 +17,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', userAuthRoute);
-// app.use('/question', questionRoute);
+app.use('/question', questionRoute);
 
 module.exports = app;

@@ -3,10 +3,13 @@ const Schema = mongoose.Schema;
 
 const questionSchema = new Schema(
   {
-    grade: {
-      type: String,
-      required: [true, 'question must have a class']
-    },
+    grade: [
+      {
+        type: String,
+        required: [true, 'question must have a class']
+      }
+    ]
+    ,
     category: {
       type: String,
       required: [true, 'question must have a category']
@@ -45,7 +48,6 @@ const questionSchema = new Schema(
         default: Date.now 
       },
   },
-  
 );
 
 module.exports = mongoose.model('question', questionSchema);
