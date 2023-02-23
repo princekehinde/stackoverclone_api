@@ -1,50 +1,48 @@
-const { successResponse, errorResponse } = require('../utils/helper/response');
-const { generateToken, decodeToken } = require('../utils/helper/jwt')
+const UserManager = require("../utils/service/user");
+const {
+  successResponse,
+  errorResponse,
+} = require("../utils/helper/response");
 const model = require('../model/index')
 
-module.exports = {
-  async Signup(req, res) {
-   try {
-       const user = await model.User.create(req.body);
-       const token = await generateToken(user);
-       return successResponse(res, 201, "Successfully created user", {
-               user,
-               token
-           });
-    }  catch (error) {
-        return errorResponse(res, 500, error.message);
-    }
-  },
-
-  async SignIn(req, res, next) {
+class UserController {
+  static async Signup(req, res) {
     try {
-        const user = await model.User.findOne({ email: req.body.email }).select(
-          '+password'
-        );
-  
-        if (!user) {
-          return errorResponse(res, 401, 'Password or UserName is incorrect');
+            const result = await UserManager.register(req.body);
+      
+            if (result.statusCode === 400)
+              return errorResponse(res, result.statusCode, result.message);
+      
+            return successResponse(
+              res,
+              result.statusCode,
+              result.message,
+              result.data
+            );
+          } catch (error) {
+            return errorResponse(res, 500, error.message);
+          }
         }
-        const confirm = user.comparePassword(req.body.password);
-        if (!confirm) {
-          return errorResponse(res, 401, 'Invalid credentials');
-        }
-        const token = await generateToken(user);
-        
-        const userInfo = {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email
-          };
 
-        return successResponse(res, 200, 'successfully logged in', {
-              userInfo,
-              token
-        });
-      } catch (error) {
-        return errorResponse(res, 500, error.message);
-      }
-    },
+        static async login(req, res) {
+          try {
+            const result = await UserManager.login(req.body);
+      
+            if (result.statusCode === 404 || result.statusCode === 400)
+              return errorResponse(res, result.statusCode, result.message);
+      
+            return successResponse(
+              res,
+              result.statusCode,
+              result.message,
+              result.data
+            );
+          } catch (error) {
+            return errorResponse(res, 500, error.message, console.log(error));
+          }
+        }
 
 };
+
+
+module.exports = UserController

@@ -58,9 +58,9 @@ module.exports = {
           return errorResponse(res, 401,'token required');
         }
         const user = await decodeToken(authorization);
-        if (!user) {
-          return errorResponse(res, 401,'Invalid User Token');
-        }
+        // if (!user) {
+        //   return errorResponse(res, 401,'Invalid User Token');
+        // }
         req.user = user;
         console.log(user);
         return next();

@@ -4,7 +4,7 @@ const model = require('../../model')
 
 async function generateToken(user) {
   const payload = {
-    subject: user.id
+    // subject: user.id
   };
 
   const options = {

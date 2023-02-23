@@ -27,7 +27,7 @@ const questionSchema = new Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: [true, 'question must have a User id']
+      // required: true,
     },
     answers: [
       {
