@@ -43,7 +43,7 @@ class QuestionManager {
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 10,
     }
-       const allQue = await UserModel.Question.find({ pageQuery});
+       const allQue = await QuestionModel.Question.find({ pageQuery});
       if (allQue.length > 0) {
         return  {
           statusCode: 200,
