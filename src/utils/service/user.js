@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = {
   generateToken,
   decodeToken
@@ -15,14 +15,17 @@ class UserManager {
 
  static userResponse = (data) => {
   return {
+    id: data.id,
     email: data.email,
-    username: data.username,
-    // id: data.id,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    password: data.password
+
   };
 };
 
 /**
- * @param {string} username the username of the user
+ * @param {string} firstName the username of the user
  * @param {string} email the email of the user
  * @param {string} password the password of the user
  */
@@ -31,18 +34,19 @@ static async register(data) {
   try {
     const { email, firstName, lastName, password } = data;
 
-  //   const user = await UserModel.findOne({
-  //     $or: [
-  //       { email: email },
-  //       { username: userName},
-  //     ],
-  //   });
+    const user = await UserModel.User.findOne({
+      $or: [
+        { email: email },
+        { firstName: firstName},
+        {lastName: lastName}
+      ],
+    });
 
-  //   if (user)
-  //     return {
-  //       statusCode: 400,
-  //       message: "User already exists",
-  //     };
+    if (!user)
+      return {
+        statusCode: 400,
+        message: "User already exists",
+      };
 
     const hashPassword = await bcrypt.hashSync(password, 10);
 
@@ -70,31 +74,29 @@ static async register(data) {
    */
   static async login(data) {
     const { email, password } = data;
-    const user = await UserModel.User.findOne({ email: email});
-    if (!user)
+      const user = await UserModel.User.findOne({ email: email })
+      if (!user)
+        return {
+          statusCode: 404,
+          message: "User not found",
+        };
+  
+      const confirm = await bcrypt.compareSync(password, data.password);
+      if (confirm)
+        return {
+          statusCode: 401,
+          message: "Invalid password",
+        };
+  
+      const token = await jwt.generateToken();
       return {
-        statusCode: 404,
-        message: "User not found",
-      };
-
-    // const isPasswordValid = await bcrypt.compareSync(password, user.password);
-    // if (isPasswordValid)
-    //   return {
-    //     statusCode: 401,
-    //     message: "Invalid password",
-    //   };
-
-    const token = await jwt.generateToken();
-
-    return {
-      statusCode: 200,
-       message: {
-        "Login successful":
-       token,},
-      data:{ user: await UserManager.userResponse(user),}
-      
-    };
-
-}
-}
+        statusCode: 200,
+         message: "Login successful",
+        data: {
+          token,
+          user: await UserManager.userResponse(user)
+        }
+      }
+    }
+  }
 module.exports = UserManager;

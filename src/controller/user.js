@@ -3,7 +3,7 @@ const {
   successResponse,
   errorResponse,
 } = require("../utils/helper/response");
-const model = require('../model/index')
+const UserModel = require('../model/index')
 
 class UserController {
   static async Signup(req, res) {

@@ -55,14 +55,13 @@ module.exports = {
       async validateUserToken(req, res, next) {
         const { authorization } = req.headers;
         if (!authorization) {
-          return errorResponse(res, 401,'token required');
+          return errorResponse(res, 400,'token required');
         }
         const user = await decodeToken(authorization);
-        // if (!user) {
-        //   return errorResponse(res, 401,'Invalid User Token');
-        // }
+        if (user) {
+          return errorResponse(res, 400,'Invalid User Token');
+        }
         req.user = user;
-        console.log(user);
         return next();
       }
 };

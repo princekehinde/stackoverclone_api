@@ -20,7 +20,7 @@ class QuestionController {
       result.data
     );
   } catch (error) {
-    return errorResponse(res, 500, error.message, console.log(error));
+    return errorResponse(res, 500, error.message,);
   }
 }
 
